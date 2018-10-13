@@ -134,26 +134,27 @@ contract ColdStaking {
         assert(msg.value >= staking_threshold);
         new_block(); //run once per block.
         
+        Staker storage _staker = staker[msg.sender];
         // claim reward if available.
-        if (staker[msg.sender].amount > 0)
+        if (_staker.amount > 0)
         {
-            if (Timestamp >= staker[msg.sender].time + round_interval)
+            if (Timestamp >= _staker.time + round_interval)
             { 
                 claim(); 
             }
-            TotalStakingWeight = TotalStakingWeight.sub((Timestamp.sub(staker[msg.sender].time)).mul(staker[msg.sender].amount)); // remove from Weight        
+            TotalStakingWeight = TotalStakingWeight.sub((Timestamp.sub(_staker.time)).mul(_staker.amount)); // remove from Weight        
         }
 
         TotalStakingAmount = TotalStakingAmount.add(msg.value);
-        staker[msg.sender].time = Timestamp;
-        staker[msg.sender].amount = staker[msg.sender].amount.add(msg.value);
+        _staker.time = Timestamp;
+        _staker.amount = _staker.amount.add(msg.value);
        
 
         emit StartStaking(
             msg.sender,
             msg.value,
-            staker[msg.sender].amount,
-            staker[msg.sender].time
+            _staker.amount,
+            _staker.time
         );
     }
 
