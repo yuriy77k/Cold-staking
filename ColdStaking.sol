@@ -105,7 +105,7 @@ contract ColdStaking {
     }
 
     // this function can be called for manualy update TotalStakingAmount value.
-    function new_block() public
+    function new_block() public payable
     {
         if (block.number > LastBlock)   //run once per block.
         {
