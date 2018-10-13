@@ -66,6 +66,9 @@ contract ColdStaking {
     uint256 public max_delay        = 365 * 2 days;// 2 years.
     uint256 public DateStartStaking = 1541980800;  // 12.11.2018 0:0:0 UTC.
 
+    uint256 private constant MIN_BLOCK_NUMBER_TO_CLEAR_TREASURER = 1800000;
+    uint256 private constant BLOCK_MULTIPLIER = 25;
+
 
     /*========== TESTING VALUES ===========
     uint public round_interval = 1 hours; // 1 hours.
@@ -91,7 +94,7 @@ contract ColdStaking {
 
     function clear_treasurer () public only_treasurer
     {
-        require(block.number > 1800000 && !CS_frozen);
+        require(block.number > MIN_BLOCK_NUMBER_TO_CLEAR_TREASURER && !CS_frozen);
         Treasury = address(0);
     }
 	
@@ -120,9 +123,9 @@ contract ColdStaking {
             
             uint256 _blocks = block.number - _LastBlock;
             uint256 _seconds = now - Timestamp;
-            if (_seconds > _blocks * 25) //if time goes far in the future, then use new time as 25 second * blocks.
+            if (_seconds > _blocks * BLOCK_MULTIPLIER) //if time goes far in the future, then use new time as 25 second * blocks.
             {
-                _seconds = _blocks * 25;
+                _seconds = _blocks * BLOCK_MULTIPLIER;
             }
             TotalStakingWeight += _seconds.mul(TotalStakingAmount);
             Timestamp += _seconds;
