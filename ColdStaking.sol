@@ -208,7 +208,7 @@ contract ColdStaking {
     }
 
     //This function may be used for info only. This can show estimated user reward at current time.
-    function stake_reward(address _addr) public constant returns (uint256)
+    function stake_reward(address _addr) public view returns (uint256)
     {
         Staker memory _staker = staker[_addr];
 
@@ -224,7 +224,7 @@ contract ColdStaking {
         return StakingRewardPool.mul(_StakerWeight).div(TotalStakingWeight);    //StakingRewardPool * _StakerWeight/TotalStakingWeight
     }
 
-    function staker_info(address _addr) public constant returns (uint256 _amount, uint256 _time)
+    function staker_info(address _addr) public view returns (uint256 _amount, uint256 _time)
     {
         _amount = staker[_addr].amount;
         _time = staker[_addr].time;
