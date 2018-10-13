@@ -39,10 +39,10 @@ contract ColdStaking {
 
     using SafeMath for uint256;
 
-    event StartStaking(address addr, uint256 value, uint256 amount, uint256 time);
-    event WithdrawStake(address staker, uint256 amount);
-    event Claim(address staker, uint256 reward);
-    event DonationDeposited(address _address, uint256 value);
+    event StartStaking(address indexed addr, uint256 value, uint256 amount, uint256 time);
+    event WithdrawStake(address indexed staker, uint256 amount);
+    event Claim(address indexed staker, uint256 reward);
+    event DonationDeposited(address indexed _address, uint256 value);
 
 
     struct Staker
