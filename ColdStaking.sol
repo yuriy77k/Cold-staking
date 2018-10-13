@@ -92,7 +92,7 @@ contract ColdStaking {
     function clear_treasurer () public only_treasurer
     {
         require(block.number > 1800000 && !CS_frozen);
-        Treasury = 0x00;
+        Treasury = address(0);
     }
 	
 
