@@ -210,14 +210,16 @@ contract ColdStaking {
     //This function may be used for info only. This can show estimated user reward at current time.
     function stake_reward(address _addr) public constant returns (uint256)
     {
-        require(staker[_addr].amount > 0);
+        Staker memory _staker = staker[_addr];
+
+        require(_staker.amount > 0);
         require(!CS_frozen);
 
-        uint256 _StakingInterval = now.sub(staker[_addr].time); //time interval of deposit.
+        uint256 _StakingInterval = now.sub(_staker.time); //time interval of deposit.
 
-        //uint _StakerWeight = _StakingInterval.mul(staker[_addr].amount); //Staker weight.
+        //uint _StakerWeight = _StakingInterval.mul(_staker.amount); //Staker weight.
         uint256 _CompleteRoundsInterval = (_StakingInterval / round_interval).mul(round_interval); //only complete rounds.
-        uint256 _StakerWeight = _CompleteRoundsInterval.mul(staker[_addr].amount); //Weight of completed rounds.
+        uint256 _StakerWeight = _CompleteRoundsInterval.mul(_staker.amount); //Weight of completed rounds.
 
         return StakingRewardPool.mul(_StakerWeight).div(TotalStakingWeight);    //StakingRewardPool * _StakerWeight/TotalStakingWeight
     }
