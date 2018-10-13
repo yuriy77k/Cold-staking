@@ -116,17 +116,16 @@ contract ColdStaking {
             // msg.value here for case new_block() is calling from start_staking(), and msg.value will be added to CurrentBlockDeposits.
 
             //The consensus protocol enforces block timestamps are always atleast +1 from their parent, so a node cannot "lie into the past". 
-            if (now > Timestamp) //But with this condition I feel safer :) May be removed.
+            assert(now > Timestamp); //But with this condition I feel safer :) May be removed.
+            
+            uint256 _blocks = block.number - _LastBlock;
+            uint256 _seconds = now - Timestamp;
+            if (_seconds > _blocks * 25) //if time goes far in the future, then use new time as 25 second * blocks.
             {
-                uint256 _blocks = block.number - _LastBlock;
-                uint256 _seconds = now - Timestamp;
-                if (_seconds > _blocks * 25) //if time goes far in the future, then use new time as 25 second * blocks.
-                {
-                    _seconds = _blocks * 25;
-                }
-                TotalStakingWeight += _seconds.mul(TotalStakingAmount);
-                Timestamp += _seconds;
+                _seconds = _blocks * 25;
             }
+            TotalStakingWeight += _seconds.mul(TotalStakingAmount);
+            Timestamp += _seconds;
         }
     }
 
