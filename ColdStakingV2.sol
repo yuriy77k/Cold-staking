@@ -142,7 +142,9 @@ contract ColdStaking {
                 if (r > 12) r = 12;
                 multiplier = (40 + (5 * r)) * NOMINATOR / 100;  // staker multiplier = 0.40 + (0.05 * rounds). [0.45..1]
             }
-            if (staker[msg.sender].multiplier > multiplier && staker_end_time > _Timestamp) {    // recalculate multiplier = (staker.multiplier * staker.amount + new.multiplier * new.amount) / ( staker.amount + new.amount)
+            // if there is active staking with bigger multiplier
+            if (staker[msg.sender].multiplier > multiplier && staker_end_time > _Timestamp) {
+                // recalculate multiplier = (staker.multiplier * staker.amount + new.multiplier * new.amount) / ( staker.amount + new.amount)
                 multiplier = ((staker[msg.sender].multiplier.mul(staker_amount)).add(multiplier.mul(msg.value))).div(staker_amount.add(msg.value));
                 if (multiplier > NOMINATOR) multiplier = NOMINATOR; // multiplier can't be more then 1
             }
@@ -269,7 +271,7 @@ contract ColdStaking {
         uint _amount = staker[_addr].amount;
         
         TotalStakingAmount = TotalStakingAmount.sub(_amount);
-        TotalStakingWeight = TotalStakingWeight.sub((Timestamp.sub(staker[_addr].time)).mul(_amount)); // remove from Weight.
+        TotalStakingWeight = TotalStakingWeight.sub(((staker[_addr].end_time).sub(staker[_addr].time)).mul(_amount)); // remove from Weight.
 
         staker[_addr].amount = 0;
         _addr.transfer(_amount);
